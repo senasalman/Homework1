@@ -173,30 +173,75 @@ Besides the obvious variables of `title`, `genre`, `director`, `year`, and `dura
 ## Use your data import, inspection, and cleaning skills to answer the following:
 
 - Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
+```{r}
+skim(movies)
+sum(duplicated(movies))
+```
 - Produce a table with the count of movies by genre, ranked in descending order
+```{r}
+ movies %>%
+    group_by(genre) %>%
+    count(sort=TRUE) 
+```
 - Produce a table with the average gross earning and budget (`gross` and `budget`) by genre. Calculate a variable `return_on_budget` which shows how many $ did a movie make at the box office for each $ of its budget. Ranked genres by this `return_on_budget` in descending order
+```{r}
+movies_genre<- movies %>%
+  group_by(genre) %>% 
+  summarize(avg_gross=mean(gross),avg_budget=mean(budget)) %>% 
+  mutate(return_on_budget=avg_gross-avg_budget) %>% 
+  arrange(desc(return_on_budget))
+```
 - Produce a table that shows the top 15 directors who have created the highest gross revenue in the box office. Don't just show the total gross amount, but also the mean, median, and standard deviation per director.
+```{r}
+movies_director<-movies %>% 
+  group_by(director) %>% 
+  summarize(total=sum(gross),mean=mean(gross),median=median(gross),sd=sd(gross)) %>% 
+  arrange(desc(total)) %>% 
+  head(15)
+```
 - Finally, ratings. Produce a table that describes how ratings are distributed by genre. We don't want just the mean, but also, min, max, median, SD and some kind of a histogram or density graph that visually shows how ratings are distributed. 
-
+```{r}
+movies_rating<-movies %>% 
+  group_by(genre) %>% 
+  summarize(mean=mean(rating),min=min(rating),max=max(rating),median=median(rating),sd=sd(rating)) 
+p<-ggplot(movies,aes(rating))+
+  geom_histogram()+
+  facet_wrap(~genre)
+p
+```
 ## Use `ggplot` to answer the following
 
   - Examine the relationship between `gross` and `cast_facebook_likes`. Produce a scatterplot and write one sentence discussing whether the number of facebook likes that the cast has received is likely to be a good predictor of how much money a movie will make at the box office. What variable are you going to map to the Y- and X- axes?
   
-  
+Y-axes should be 'gross', X-axes should be 'cast_facebook_likes'.  
+Cast_facebook_likes does bot seem to be a good indicator of the gross revenue a movie will make, as there is no linear relationship between the two variable.  
 ```{r, gross_on_fblikes}
-
+glimpse(movies)
+a<-ggplot(movies,aes(x=cast_facebook_likes,y=gross))+
+  geom_jitter()
+a
 ```
 
   - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
-
+  
+Budget is also not a good indicator of gross revenue a movie can make, since the scatterplot is very scattered.
 ```{r, gross_on_budget}
-
+b<-ggplot(movies,aes(x=budget,y=gross))+
+  geom_jitter()
+b
 ```
   
   - Examine the relationship between `gross` and `rating`. Produce a scatterplot, faceted by `genre` and discuss whether IMDB ratings are likely to be a good predictor of how much money a movie will make at the box office. Is there anything strange in this dataset?
 
+For most genres, the higher the ratings are, the more gross revenue a movie will make at the bax office.
+However, animation, documentary, fantasy and sci-fi are exceptions.
+For family, romance, musical, thriller and western, the data is not sufficient to tell any relationships.
+The dataset is biased towards certain genres of movies, and it fail to represent the complete landscape of the movie industry.
 ```{r, gross_on_rating}
-
+c<-ggplot(movies,aes(x=rating,y=gross))+
+  geom_jitter()+
+  facet_wrap(~genre)
+c
 ```
 
 
