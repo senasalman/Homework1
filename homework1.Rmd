@@ -496,6 +496,151 @@ Produce a one-page summary describing this dataset. Here is a non-exhaustive lis
 1. Plot the distribution of income by education level. Use a facet_wrap and a theme from `ggthemes`
 1. Plot income vs age, faceted by `job_role`
 
+first, let's look at the cleaned data
+
+```{r glimpse_skim_data}
+glimpse(hr_cleaned)
+skim(hr_cleaned)
+```
+
+## count on attrition
+
+```{r attrition}
+hr_cleaned %>% 
+  group_by(attrition) %>% 
+  count() %>% 
+  mutate(frequency = n/length(hr_cleaned$attrition))
+```
+
+## distribution of `age`, `years_at_company`, `monthly_income` and `years_since_last_promotion` 
+* age, years_at_company, monthly_income and years_since_last_promotion are right skewed
+* age is closer to normal distribution
+
+```{r distribution}
+hr_cleaned %>% 
+  ggplot(aes(age)) +
+  geom_density() +
+  labs(title = "distribution of age") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(years_at_company)) +
+  geom_density() +
+  labs(title = "distribution of years_at_company") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(monthly_income)) +
+  geom_density() +
+  labs(title = "distribution of monthly_income") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(years_since_last_promotion)) +
+  geom_density() +
+  labs(title = "distribution of years_since_last_promotion") +
+  theme_economist()
+```
+
+## distribution of `job_satisfaction` and `work_life_balance` distributed? Don't just report counts, but express categories as % of total
+
+```{r distribution2}
+hr_cleaned %>% 
+  group_by(job_satisfaction) %>% 
+  count() %>% 
+  mutate(percent_job_satisfaction = n/length(hr_cleaned$job_satisfaction)) %>%
+  ggplot(aes(x = job_satisfaction, y = percent_job_satisfaction)) +
+  geom_col() +
+  labs(title = "distribution of job_satisfaction") +
+  theme_economist()
+
+hr_cleaned %>% 
+  group_by(work_life_balance) %>% 
+  count() %>% 
+  mutate(percent_work_life_balance = n/length(hr_cleaned$work_life_balance)) %>%
+  ggplot(aes(x = work_life_balance, y = percent_work_life_balance)) +
+  geom_col() +
+  labs(title = "distribution of work_life_balance") +
+  theme_economist()
+```
+
+## relationship between income and education/gender
+
+```{r relationship}
+  hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(n = count(education), mean_income = AVERAGE(monthly_income), median_income = median(monthly_income))
+
+hr_cleaned %>% 
+  group_by(gender) %>% 
+  summarise(n = count(gender), mean_income = AVERAGE(monthly_income), median_income = median(monthly_income))
+
+```
+
+
+## relationship between income and job role
+```{r income vs job}
+hr_cleaned %>% 
+  ggplot(aes(y = reorder(job_role, monthly_income), x=monthly_income)) +
+  geom_boxplot() +
+  labs(title = "income of different job roles", y = "") +
+  theme_economist()
+```
+
+
+## relationship between mean/median income by education level.
+```{r barchart}
+hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(mean_income = AVERAGE(monthly_income)) %>% 
+  ggplot(aes(x = reorder(education, -mean_income), y = mean_income)) +
+  geom_col() +
+  labs(title = "mean income by education") +
+  theme_economist()
+
+hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(median_income = median(monthly_income)) %>% 
+  ggplot(aes(x = reorder(education, -median_income), y = median_income)) +
+  geom_col() +
+  labs(title = "median income by education") +
+  theme_economist()
+```
+
+## distribution of income by education level
+```{r income by education}
+hr_cleaned %>% 
+  ggplot(aes(monthly_income)) +
+  geom_histogram() +
+  facet_wrap(~education) +
+  theme_economist() +
+  labs(title = "distribution of income by education level", y = "")
+
+```
+
+
+## income vs age, faceted by `job_role`
+```{r income by age}
+hr_cleaned %>% 
+  ggplot(aes(x = age, y = monthly_income)) +
+  geom_point() +
+  facet_wrap(~job_role) +
+  labs(title = "income vs age, by job role") +
+  theme_economist()
+```
+
+## relationship between marital_status and median income
+```{r relationship2}
+hr_cleaned %>% 
+  group_by(marital_status) %>% 
+  summarise(median_income = median(monthly_income)) %>% 
+  ggplot(aes(x = reorder(marital_status, -median_income), y = median_income)) +
+  geom_col() +
+  labs(title = "median income by marital status") +
+  theme_economist()
+
+
+```
 
 # Challenge 1: Replicating a chart
 
