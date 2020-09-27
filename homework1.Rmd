@@ -156,7 +156,7 @@ We will look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movi
   
 ```{r,load_movies, warning=FALSE, message=FALSE, eval=FALSE}
 
-movies <- read_csv(here::here("data", "movies.csv"))
+movies <- vroom::vroom("movies.csv")
 glimpse(movies)
 
 ```
@@ -425,7 +425,7 @@ First let us load the data
 
 ```{r}
 
-hr_dataset <- read_csv(here::here("data", "datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv"))
+hr_dataset <- read_csv(here::here("datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv"))
 glimpse(hr_dataset)
 
 ```
@@ -492,6 +492,151 @@ Produce a one-page summary describing this dataset. Here is a non-exhaustive lis
 1. Plot the distribution of income by education level. Use a facet_wrap and a theme from `ggthemes`
 1. Plot income vs age, faceted by `job_role`
 
+first, let's look at the cleaned data
+
+```{r glimpse_skim_data}
+glimpse(hr_cleaned)
+skim(hr_cleaned)
+```
+
+## count on attrition
+
+```{r attrition}
+hr_cleaned %>% 
+  group_by(attrition) %>% 
+  count() %>% 
+  mutate(frequency = n/length(hr_cleaned$attrition))
+```
+
+## distribution of `age`, `years_at_company`, `monthly_income` and `years_since_last_promotion` 
+* age, years_at_company, monthly_income and years_since_last_promotion are right skewed
+* age is closer to normal distribution
+
+```{r distribution}
+hr_cleaned %>% 
+  ggplot(aes(age)) +
+  geom_density() +
+  labs(title = "distribution of age") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(years_at_company)) +
+  geom_density() +
+  labs(title = "distribution of years_at_company") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(monthly_income)) +
+  geom_density() +
+  labs(title = "distribution of monthly_income") +
+  theme_economist()
+
+hr_cleaned %>% 
+  ggplot(aes(years_since_last_promotion)) +
+  geom_density() +
+  labs(title = "distribution of years_since_last_promotion") +
+  theme_economist()
+```
+
+## distribution of `job_satisfaction` and `work_life_balance` distributed? Don't just report counts, but express categories as % of total
+
+```{r distribution2}
+hr_cleaned %>% 
+  group_by(job_satisfaction) %>% 
+  count() %>% 
+  mutate(percent_job_satisfaction = n/length(hr_cleaned$job_satisfaction)) %>%
+  ggplot(aes(x = job_satisfaction, y = percent_job_satisfaction)) +
+  geom_col() +
+  labs(title = "distribution of job_satisfaction") +
+  theme_economist()
+
+hr_cleaned %>% 
+  group_by(work_life_balance) %>% 
+  count() %>% 
+  mutate(percent_work_life_balance = n/length(hr_cleaned$work_life_balance)) %>%
+  ggplot(aes(x = work_life_balance, y = percent_work_life_balance)) +
+  geom_col() +
+  labs(title = "distribution of work_life_balance") +
+  theme_economist()
+```
+
+## relationship between income and education/gender
+
+```{r relationship}
+  hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(n = count(education), mean_income = AVERAGE(monthly_income), median_income = median(monthly_income))
+
+hr_cleaned %>% 
+  group_by(gender) %>% 
+  summarise(n = count(gender), mean_income = AVERAGE(monthly_income), median_income = median(monthly_income))
+
+```
+
+
+## relationship between income and job role
+```{r income vs job}
+hr_cleaned %>% 
+  ggplot(aes(y = reorder(job_role, monthly_income), x=monthly_income)) +
+  geom_boxplot() +
+  labs(title = "income of different job roles", y = "") +
+  theme_economist()
+```
+
+
+## relationship between mean/median income by education level.
+```{r barchart}
+hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(mean_income = AVERAGE(monthly_income)) %>% 
+  ggplot(aes(x = reorder(education, -mean_income), y = mean_income)) +
+  geom_col() +
+  labs(title = "mean income by education") +
+  theme_economist()
+
+hr_cleaned %>% 
+  group_by(education) %>% 
+  summarise(median_income = median(monthly_income)) %>% 
+  ggplot(aes(x = reorder(education, -median_income), y = median_income)) +
+  geom_col() +
+  labs(title = "median income by education") +
+  theme_economist()
+```
+
+## distribution of income by education level
+```{r income by education}
+hr_cleaned %>% 
+  ggplot(aes(monthly_income)) +
+  geom_histogram() +
+  facet_wrap(~education) +
+  theme_economist() +
+  labs(title = "distribution of income by education level", y = "")
+
+```
+
+
+## income vs age, faceted by `job_role`
+```{r income by age}
+hr_cleaned %>% 
+  ggplot(aes(x = age, y = monthly_income)) +
+  geom_point() +
+  facet_wrap(~job_role) +
+  labs(title = "income vs age, by job role") +
+  theme_economist()
+```
+
+## relationship between marital_status and median income
+```{r relationship2}
+hr_cleaned %>% 
+  group_by(marital_status) %>% 
+  summarise(median_income = median(monthly_income)) %>% 
+  ggplot(aes(x = reorder(marital_status, -median_income), y = median_income)) +
+  geom_col() +
+  labs(title = "median income by marital status") +
+  theme_economist()
+
+
+```
 
 # Challenge 1: Replicating a chart
 
@@ -500,7 +645,7 @@ The purpose of this exercise is to make a publication-ready plot using your `dpl
 ```{r, warning=FALSE}
 # Replicate Figure 3
 library(ggrepel)
-#CDC_Males <- read_csv(CDC_Males)
+CDC_Males <- vroom::vroom("CDC_Males.csv")
 glimpse(CDC_Males)
 skim(CDC_Males)
 CDC_Males_Firearm<- 
@@ -562,38 +707,8 @@ library(tidytext)
 CA_contributors_2016 <- vroom::vroom("CA_contributors_2016.csv")%>%
   mutate(zip = as.character(zip))
 
-zip_codes <- vroom::vroom("zip_code_database.csv")
-
-zip_codes <- zip_codes%>%
+zip_codes <- vroom::vroom("zip_code_database.csv")%>%
   select(zip,primary_city)
-
-# joined_contribution_zip_Clinton <- left_join(CA_contributors_2016,zip_codes)%>%
-#   filter(cand_nm=="Clinton, Hillary Rodham")%>%
-#   group_by(cand_nm,primary_city)%>%
-#   summarise(contribution_per_city=sum(contb_receipt_amt))%>%
-#   arrange(desc(contribution_per_city))%>%
-#   slice(1:10)
-# 
-# joined_contribution_zip_Trump <- left_join(CA_contributors_2016,zip_codes)%>%
-#   filter(cand_nm=="Trump, Donald J.")%>%
-#   group_by(cand_nm,primary_city)%>%
-#   summarise(contribution_per_city=sum(contb_receipt_amt))%>%
-#   arrange(desc(contribution_per_city))%>%
-#   slice(1:10)
-# 
-# graph1 <- ggplot(joined_contribution_zip_Clinton, aes(x=contribution_per_city, y=reorder(primary_city,contribution_per_city)))+
-#   geom_col(fill="blue")+
-#   labs(y="",x="")+
-#   facet_wrap(~cand_nm)+
-#   scale_x_continuous(labels = scales::dollar_format())
-# 
-# graph2 <- ggplot(joined_contribution_zip_Trump, aes(x=contribution_per_city, y=reorder(primary_city,contribution_per_city)))+
-#   geom_col(fill="red")+
-#   labs(y="",x="")+
-#   facet_wrap(~cand_nm)+
-#   scale_x_continuous(labels = scales::dollar_format())
-# 
-# graph1 + graph2 + plot_annotation(title = "Where did candidates raise most money?",caption="Amount raised")
 
 top_candidates <- left_join(CA_contributors_2016,zip_codes)
 
@@ -614,7 +729,30 @@ top_candidates%>%
          title = "Where did candidates raise most money?")
   
 ```
+```{r, top10_candidates,fig.height=10, fig.width=10}
+top10_cand_name <- top_candidates%>%
+  group_by(cand_nm)%>%
+  summarise(cand_donation=sum(contb_receipt_amt))%>%
+  arrange(desc(cand_donation))%>%
+  top_n(10)
 
+top10_cand_city <- left_join(top10_cand_name,top_candidates,"cand_nm")%>%
+  group_by(cand_nm,primary_city)%>%
+  summarise(city_donation=sum(contb_receipt_amt))%>%
+  top_n(10)%>%
+  mutate(cand_nm=as.factor(cand_nm), primary_city = reorder_within(primary_city,city_donation,cand_nm),names)%>%
+  ggplot(aes(x=city_donation, y=primary_city, fill=cand_nm))+
+  geom_col(show.legend = FALSE)+
+  facet_wrap(~cand_nm,scales = "free", nrow = 5)+
+  scale_x_continuous(labels = scales::dollar_format())+
+  scale_y_reordered()+
+  labs(x = "Amount raised",
+         y = NULL,
+         title = "Where did candidates raise most money?")
+  
+  top10_cand_city
+
+```
 
 
 
