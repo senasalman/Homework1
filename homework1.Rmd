@@ -156,7 +156,7 @@ We will look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movi
   
 ```{r,load_movies, warning=FALSE, message=FALSE, eval=FALSE}
 
-movies <- read_csv(here::here("movies.csv"))
+movies <- vroom::vroom("movies.csv")
 glimpse(movies)
 
 ```
@@ -588,7 +588,30 @@ top_candidates%>%
          title = "Where did candidates raise most money?")
   
 ```
+```{r, top10_candidates,fig.height=10, fig.width=10}
+top10_cand_name <- top_candidates%>%
+  group_by(cand_nm)%>%
+  summarise(cand_donation=sum(contb_receipt_amt))%>%
+  arrange(desc(cand_donation))%>%
+  top_n(10)
 
+top10_cand_city <- left_join(top10_cand_name,top_candidates,"cand_nm")%>%
+  group_by(cand_nm,primary_city)%>%
+  summarise(city_donation=sum(contb_receipt_amt))%>%
+  top_n(10)%>%
+  mutate(cand_nm=as.factor(cand_nm), primary_city = reorder_within(primary_city,city_donation,cand_nm),names)%>%
+  ggplot(aes(x=city_donation, y=primary_city, fill=cand_nm))+
+  geom_col(show.legend = FALSE)+
+  facet_wrap(~cand_nm,scales = "free", nrow = 5)+
+  scale_x_continuous(labels = scales::dollar_format())+
+  scale_y_reordered()+
+  labs(x = "Amount raised",
+         y = NULL,
+         title = "Where did candidates raise most money?")
+  
+  top10_cand_city
+
+```
 
 
 
