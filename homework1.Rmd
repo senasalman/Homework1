@@ -265,7 +265,6 @@ Based on this dataset, create a table and a bar plot that shows the number of co
 
 ```{r companies_per_sector}
 
-# YOUR CODE GOES HERE
 companies_per_sector <- nyse %>%
   group_by(sector)%>%
   summarise(Number_of_Companies = n())%>%
@@ -373,7 +372,6 @@ Create a dataframe and assign it to a new object, where you summarise monthly re
 
 ```{r summarise_monthly_returns}
 
-# YOUR CODE GOES HERE
 summarise_monthly_returns <- myStocks_returns_monthly %>%
   group_by(symbol)%>%
   summarise(min_month_return = min(monthly_returns), 
@@ -389,7 +387,6 @@ summarise_monthly_returns
 Plot a density plot, using `geom_density()`, for each of the stocks
 ```{r density_monthly_returns}
 
-# YOUR CODE GOES HERE
 ggplot(myStocks_returns_monthly, aes(x=monthly_returns))+
   geom_density()+
   facet_wrap(~symbol)
@@ -403,7 +400,6 @@ We can see that the stocks densities seem to have a standard normal distribution
 Finally, produce a plot that shows the expected monthly return (mean) of a stock on the Y axis and the risk (standard deviation) in the X-axis. Please use `ggrepel::geom_text_repel()` to label each stock with its ticker symbol
 
 ```{r risk_return_plot}
-# YOUR CODE GOES HERE
 library(ggrepel)
 
 ggplot(summarise_monthly_returns, aes(x=mean_month_return, y=sd_month_return, label=symbol))+
