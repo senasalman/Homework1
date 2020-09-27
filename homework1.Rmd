@@ -250,7 +250,7 @@ The dataset is biased towards certain genres of movies, and it fail to represent
 ggplot(movies, aes(y=gross, x=rating))+
   geom_point()+
   scale_y_log10(labels = scales::dollar_format())+
-  geom_smooth(mothod=lm, se=FALSE)+
+  geom_smooth(method=lm, se=FALSE)+
   facet_wrap(~genre)+
   labs(title = "Relationship between rating and gross profit in box office\n", x="\nRating", y="Gross profit in box office\n")+
   theme_economist()
