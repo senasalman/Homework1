@@ -127,25 +127,14 @@ ggplot(spirit_data, aes(y=reorder(country,spirit_servings),x=spirit_servings))+
   scale_x_continuous(expand = c(0,0))
 ```
 
-Finally, make a plot that shows the top 25 spirit consuming countries
-```{r spirit_plot}
-# YOUR CODE GOES HERE
-drinks
-spirit_data <- drinks %>% 
-  arrange(desc(spirit_servings)) %>% 
-  slice(1:25)
-
-spirit_data
-
-ggplot(spirit_data, aes(x=reorder(country,-spirit_servings), y=spirit_servings, fill=country))+
-  geom_col() +
-  theme_minimal()
-
-```
-
 What can you infer from these plots? Don't just explain what's in the graph, but speculate or tell a short story (1-2 paragraphs max).
 
-####
+We can see significant differences in alcohol consumption over three classes of alcohol: beer, wine, and spirits. This comes along with at least two reasons behind it:
+
+First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. What is more, we see that muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For the wealth we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
+- Type of alcohol depending on 
+- German history , had a lot of wheat, started to produce beer
+- sterotypes (France: wine, Germany: beer, spirit: Russia, Belarus)
 
 > TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
 
