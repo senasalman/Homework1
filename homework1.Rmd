@@ -659,31 +659,8 @@ hr_cleaned %>%
 
 The purpose of this exercise is to make a publication-ready plot using your `dplyr` and `ggplot2` skills. Open the journal article "Riddell_Annals_Hom-Sui-Disparities.pdf". Read the abstract and have a look at Figure 3. The data you need is "CDC_Males.csv".
 
-```{r, warning=FALSE}
-# Replicate Figure 3
-library(ggrepel)
-CDC_Males <- vroom::vroom("CDC_Males.csv")
-glimpse(CDC_Males)
-skim(CDC_Males)
-CDC_Males_Firearm<- 
-CDC_Males%>%
-  filter(type.fac=="Firearm-related") #filter for firearm-related only 
-
-  ggplot(CDC_Males_Firearm, aes(x=crude.suicide.White, y=crude.homicide.White,size= average.pop.white, label=ST)) + #x-axis: white suicide rate, y-axis: white homicide rate, size of points by average white population, label points by state
-  geom_point(aes(fill=gun.house.prev.category), color="black", stroke=0.8, shape=21, alpha=.6)+ #fill points by gun ownership category, outline color black, transparency .6, shape 21 because it is circle with fill and outline, stroke .8 is thickness of outline
-  scale_fill_brewer(type="seq",palette="YlOrRd", direction=1,breaks= c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%"),labels=c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%")) + #colorscheme from colorbrewer2
-  ggtitle("fig 3") + #plot title
-  xlab("white suic") + ylab("white homic")+ #x and y axis labels
- theme_classic()+ # white background
-  theme(plot.title= element_text(color="black", size=10), axis.title.x= element_text(color="black", size=9, face="bold"), axis.title.y=element_text(color="black", size=9, face="bold"),legend.title=element_text(face="bold", size=8), legend.text=element_text(face="bold", size=7))+ #font size and type for title, legend, and axis labels
-  labs(fill="gun own",size="white p") + #legend titles
-  guides(fill=guide_legend(order=1), size=guide_legend(order=2)) + # reorder legend
-  scale_size_continuous(breaks=c(200000,500000,1500000,3000000,7000000), labels= c("200 000", "500 000","1 500 000", "3 000 000", "7 000 000"), range=c(2,8))+ #legend scale and labels
-  geom_text_repel(segment.alpha=0, size=2.5)+ # point labels font and positioning
-    annotate(geom="text", x=27, y=1, label="spearman corr: 0.72", size=2.5)+ #add Spearman correlation annotation
-    
-         NULL
-
+```{r challenge1, echo=FALSE, out.width="90%"}
+knitr::include_graphics(here::here("images", "figure3.jpeg"), error = FALSE)
 ```
 
 
@@ -694,6 +671,32 @@ You may find these helpful:
 - https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html
 - http://colorbrewer2.org
 
+```{r, warning=FALSE}
+# Replicate Figure 3
+library(ggrepel)
+#CDC_Males <- read_csv("CDC_Males.csv")
+glimpse(CDC_Males)
+skim(CDC_Males)
+CDC_Males_Firearm<-
+CDC_Males%>%
+  filter(type.fac=="Firearm-related") #filter for firearm-related only 
+
+  ggplot(CDC_Males_Firearm, aes(x=crude.suicide.White, y=crude.homicide.White,size= average.pop.white, label=ST)) + #x-axis: white suicide rate, y-axis: white homicide rate, size of points by average white population, label points by state
+  geom_point(aes(fill=gun.house.prev.category), color="black", stroke=0.8, shape=21, alpha=.8)+ #fill points by gun ownership category, outline color black, transparency .8, shape 21 because it is circle with fill and outline, stroke .8 is thickness of outline
+  scale_fill_brewer(type="seq",palette="YlOrRd", direction=1,breaks= c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%"),labels=c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%")) + #colorscheme from colorbrewer2
+  ggtitle("Figure 3. Relationship between the annual rates of firearm homicide and suicide among white men, \nby state, and reported household firearm ownership, 2008 to 2016.") + #plot title
+  xlab("White Suicide Rate (per 100 000 per Year)") + ylab("White Homicide Rate (per 100 000 per Year)")+ #x and y axis labels
+ theme_classic()+ # white background
+  theme(plot.title= element_text(color="black", size=10), axis.title.x= element_text(color="black", size=9, face="bold"), axis.title.y=element_text(color="black", size=9, face="bold"),legend.title=element_text(face="bold", size=8), legend.text=element_text(face="bold", size=7))+ #font size and type for title, legend, and axis labels
+  labs(fill="Gun ownership",size="White population") + #lsegend titles
+  guides(fill=guide_legend(order=1), size=guide_legend(order=2)) + # reorder legend
+  scale_size_continuous(breaks=c(200000,500000,1500000,3000000,7000000), labels= c("200 000", "500 000","1 500 000", "3 000 000", "7 000 000"), range=c(2,8))+ #legend scale and labels
+  geom_text_repel(segment.alpha=0, size=2.5)+ # point labels font and positioning
+    annotate(geom="text", x=27, y=1, label="Spearman correlation: 0.72", size=2.5)+ #add Spearman correlation annotation
+
+         NULL
+
+```
 
 
 
