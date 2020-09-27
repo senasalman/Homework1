@@ -156,7 +156,7 @@ We will look at a subset sample of movies, taken from the [Kaggle IMDB 5000 movi
   
 ```{r,load_movies, warning=FALSE, message=FALSE, eval=FALSE}
 
-movies <- read_csv(here::here("data", "movies.csv"))
+movies <- read_csv(here::here("movies.csv"))
 glimpse(movies)
 
 ```
@@ -429,7 +429,7 @@ First let us load the data
 
 ```{r}
 
-hr_dataset <- read_csv(here::here("data", "datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv"))
+hr_dataset <- read_csv(here::here("datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv"))
 glimpse(hr_dataset)
 
 ```
@@ -504,7 +504,7 @@ The purpose of this exercise is to make a publication-ready plot using your `dpl
 ```{r, warning=FALSE}
 # Replicate Figure 3
 library(ggrepel)
-#CDC_Males <- read_csv(CDC_Males)
+CDC_Males <- vroom::vroom("CDC_Males.csv")
 glimpse(CDC_Males)
 skim(CDC_Males)
 CDC_Males_Firearm<- 
@@ -566,38 +566,8 @@ library(tidytext)
 CA_contributors_2016 <- vroom::vroom("CA_contributors_2016.csv")%>%
   mutate(zip = as.character(zip))
 
-zip_codes <- vroom::vroom("zip_code_database.csv")
-
-zip_codes <- zip_codes%>%
+zip_codes <- vroom::vroom("zip_code_database.csv")%>%
   select(zip,primary_city)
-
-# joined_contribution_zip_Clinton <- left_join(CA_contributors_2016,zip_codes)%>%
-#   filter(cand_nm=="Clinton, Hillary Rodham")%>%
-#   group_by(cand_nm,primary_city)%>%
-#   summarise(contribution_per_city=sum(contb_receipt_amt))%>%
-#   arrange(desc(contribution_per_city))%>%
-#   slice(1:10)
-# 
-# joined_contribution_zip_Trump <- left_join(CA_contributors_2016,zip_codes)%>%
-#   filter(cand_nm=="Trump, Donald J.")%>%
-#   group_by(cand_nm,primary_city)%>%
-#   summarise(contribution_per_city=sum(contb_receipt_amt))%>%
-#   arrange(desc(contribution_per_city))%>%
-#   slice(1:10)
-# 
-# graph1 <- ggplot(joined_contribution_zip_Clinton, aes(x=contribution_per_city, y=reorder(primary_city,contribution_per_city)))+
-#   geom_col(fill="blue")+
-#   labs(y="",x="")+
-#   facet_wrap(~cand_nm)+
-#   scale_x_continuous(labels = scales::dollar_format())
-# 
-# graph2 <- ggplot(joined_contribution_zip_Trump, aes(x=contribution_per_city, y=reorder(primary_city,contribution_per_city)))+
-#   geom_col(fill="red")+
-#   labs(y="",x="")+
-#   facet_wrap(~cand_nm)+
-#   scale_x_continuous(labels = scales::dollar_format())
-# 
-# graph1 + graph2 + plot_annotation(title = "Where did candidates raise most money?",caption="Amount raised")
 
 top_candidates <- left_join(CA_contributors_2016,zip_codes)
 
