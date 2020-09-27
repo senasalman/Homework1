@@ -72,10 +72,6 @@ What are the variable types? Any missing values we should worry about?
 
 <<<<<<< HEAD
 ```{r glimpse_skim_data}
-=======
-```{r glimpse_skim_data_drinks}
-# YOUR CODE GOES HERE
->>>>>>> 08b27f950ce5690ad41bb5fa6175a41b551b4032
 data(drinks)
 skim(drinks)
 # No missing values!
