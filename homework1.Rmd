@@ -227,7 +227,7 @@ The scatterplot and the regression line clearly indicates the relationship betwe
 
   - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
   
-Budget is also not a good indicator of gross revenue a movie can make, since the scatterplot is very scattered.
+Budget is a good indicator of gross revenue a movie can make, and a larger  budget will make more money at the box office.
 ```{r, gross_on_budget, fig.width=10}
 ggplot(movies, aes(x=gross, y=budget))+
   geom_point()+
@@ -250,7 +250,6 @@ The dataset is biased towards certain genres of movies, and it fail to represent
 ```{r, gross_on_rating, fig.width=10}
 ggplot(movies, aes(y=gross, x=rating))+
   geom_point()+
-  scale_x_log10()+
   scale_y_log10(labels = scales::dollar_format())+
   geom_smooth(mothod=lm, se=FALSE)+
   facet_wrap(~genre)+
