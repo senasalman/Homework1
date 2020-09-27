@@ -550,7 +550,7 @@ hr_cleaned %>%
 hr_cleaned %>% 
   ggplot(aes(years_since_last_promotion)) +
   geom_density() +
-  labs(title = "Distribution of years_since_last_promotion") +
+  labs(title = "Distribution of years_since_last_promotion", y="Percentage", x="Years since last promotion") +
   theme_economist()
 ```
 
