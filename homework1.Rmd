@@ -389,7 +389,8 @@ Plot a density plot, using `geom_density()`, for each of the stocks
 
 ggplot(myStocks_returns_monthly, aes(x=monthly_returns))+
   geom_density()+
-  facet_wrap(~symbol)
+  facet_wrap(~symbol)+
+  labs(title='Monthly Returns - Density Plots')
 
 ```
 
