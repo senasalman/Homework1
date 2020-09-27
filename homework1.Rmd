@@ -137,7 +137,6 @@ First, culture and secondly wealth. For beer consumption we see that Namibia has
 At the same time, the interesting fact is that well-known stereotypes are actually reflected in the data. Countries like Russia and Belarus indeed consume the highest amount of spirits, especially, we believe, their famous vodka. Germany and the Czech Republic are leading in beer consumption, while France and Portugal stick to their prominent wines. 
 What is more, we see that Muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For wealth, we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
 Lastly, another interesting observation is that there are no countries with leading positions in several categories like beer and spirits, or wine and spirits. This means, that the actual alcohol consumption is more about preferences of the citizens connected to the above-stated reasons, rather than just pure consumption of alcohol with an aim to get tipsy.
-> TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
 
 # Analysis of movies- IMDB dataset
 
