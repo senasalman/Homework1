@@ -1,5 +1,5 @@
 ---
-title: "Session 2: Homework 1"
+title: 'Session 2: Homework 1'
 author: "Group 29"
 date: "`r Sys.Date()`"
 output:
@@ -10,6 +10,8 @@ output:
     toc: yes
     toc_float: yes
     code_folding: show
+  pdf_document:
+    toc: yes
 ---
 
 
@@ -68,7 +70,12 @@ What are the variable types? Any missing values we should worry about?
 
 - There are 1 character (country) and 4 numeric variables (beer_servings, spirit_servings, wine_servings, total_litres_of_pure_alcohol). We don't have any missing data, they are all complete.
 
+<<<<<<< HEAD
 ```{r glimpse_skim_data}
+=======
+```{r glimpse_skim_data_drinks}
+# YOUR CODE GOES HERE
+>>>>>>> 08b27f950ce5690ad41bb5fa6175a41b551b4032
 data(drinks)
 skim(drinks)
 # No missing values!
@@ -124,11 +131,18 @@ What can you infer from these plots? Don't just explain what's in the graph, but
 
 We can see significant differences in alcohol consumption over three classes of alcohol: beer, wine, and spirits. This comes along with at least two reasons behind it:
 
+<<<<<<< HEAD
 First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. What is more, we see that muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For the wealth we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
 - Type of alcohol depending on 
 - German history , had a lot of wheat, started to produce beer ...b gfdg
 - sterotypes (France: wine, Germany: beer, spirit: Russia, Belarus)
 
+=======
+First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, the Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. The origins of particular alcohol consumption may lay in the can be connected to the economic resources available to a country during its development. For example, Germany had a prosperous agriculture industry with a big production of wheat. As a result, this allowed them to start successful beer production, making this drink popular among the citizens.
+At the same time, the interesting fact is that well-known stereotypes are actually reflected in the data. Countries like Russia and Belarus indeed consume the highest amount of spirits, especially, we believe, their famous vodka. Germany and the Czech Republic are leading in beer consumption, while France and Portugal stick to their prominent wines. 
+What is more, we see that Muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For wealth, we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
+Lastly, another interesting observation is that there are no countries with leading positions in several categories like beer and spirits, or wine and spirits. This means, that the actual alcohol consumption is more about preferences of the citizens connected to the above-stated reasons, rather than just pure consumption of alcohol with an aim to get tipsy.
+>>>>>>> 08b27f950ce5690ad41bb5fa6175a41b551b4032
 
 # Analysis of movies- IMDB dataset
 
@@ -218,7 +232,7 @@ The scatterplot and the regression line clearly indicates the relationship betwe
 
   - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
   
-Budget is also not a good indicator of gross revenue a movie can make, since the scatterplot is very scattered.
+Budget is a good indicator of gross revenue a movie can make, and a larger  budget will make more money at the box office.
 ```{r, gross_on_budget, fig.width=10}
 ggplot(movies, aes(x=gross, y=budget))+
   geom_point()+
@@ -242,7 +256,6 @@ The dataset is biased towards certain genres of movies, and it fail to represent
 ```{r, gross_on_rating, fig.width=10}
 ggplot(movies, aes(y=gross, x=rating))+
   geom_point()+
-  scale_x_log10()+
   scale_y_log10(labels = scales::dollar_format())+
   geom_smooth(mothod=lm, se=FALSE)+
   facet_wrap(~genre)+
@@ -504,7 +517,7 @@ Produce a one-page summary describing this dataset. Here is a non-exhaustive lis
 
 first, let's look at the cleaned data
 
-```{r glimpse_skim_data}
+```{r glimpse_skim_data_hr}
 glimpse(hr_cleaned)
 skim(hr_cleaned)
 ```
@@ -544,7 +557,7 @@ hr_cleaned %>%
 hr_cleaned %>% 
   ggplot(aes(years_since_last_promotion)) +
   geom_density() +
-  labs(title = "Distribution of years_since_last_promotion") +
+  labs(title = "Distribution of years_since_last_promotion", y="Percentage\n", x="\nYears since last promotion") +
   theme_economist()
 ```
 
