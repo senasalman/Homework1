@@ -123,12 +123,8 @@ ggplot(spirit_data, aes(y=reorder(country,spirit_servings),x=spirit_servings))+
   scale_x_continuous(expand = c(0,0))
 ```
 
-What can you infer from these plots? Don't just explain what's in the graph, but speculate or tell a short story (1-2 paragraphs max).
 
 We can see significant differences in alcohol consumption over three classes of alcohol: beer, wine, and spirits. This comes along with at least two reasons behind it:
-
-
-
 
 First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, the Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. The origins of particular alcohol consumption may lay in the can be connected to the economic resources available to a country during its development. For example, Germany had a prosperous agriculture industry with a big production of wheat. As a result, this allowed them to start successful beer production, making this drink popular among the citizens.
 
