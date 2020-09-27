@@ -70,8 +70,8 @@ What are the variable types? Any missing values we should worry about?
 
 - There are 1 character (country) and 4 numeric variables (beer_servings, spirit_servings, wine_servings, total_litres_of_pure_alcohol). We don't have any missing data, they are all complete.
 
-```{r glimpse_skim_data_drinks}
-# YOUR CODE GOES HERE
+<<<<<<< HEAD
+```{r glimpse_skim_data}
 data(drinks)
 skim(drinks)
 # No missing values!
@@ -81,7 +81,6 @@ skim(drinks)
 Make a plot that shows the top 25 beer consuming countries
 
 ```{r beer_plot}
-# YOUR CODE GOES HERE
 beer_data<-drinks %>% 
   arrange(desc(beer_servings)) %>% 
   slice(1:25)
@@ -90,17 +89,13 @@ beer_data
 ggplot(beer_data, aes(y=reorder(country,beer_servings),x=beer_servings))+
   geom_col() +
   theme_economist() +
-  labs(title="Beer Consumption Top 25 Countries", subtitle= "in # Beer Serving consumed per person in 2010\n", y="", x="\n # Beer Servings") +
-  scale_x_continuous(expand = c(0,0))
-
-
+  labs(title="Beer Consumption Top 25 Countries", subtitle= "\nin # Beer Serving consumed per person in 2010\n", y="", x="\n # Beer Servings") +
+  scale_x_continuous(expand = c(0,0)) 
 ```
 
 Make a plot that shows the top 25 wine consuming countries
 
 ```{r wine_plot}
-
-# YOUR CODE GOES HERE
 wine_data <- drinks %>%
   arrange(desc(wine_servings))%>%
   slice(1:25)
@@ -109,14 +104,13 @@ wine_data
 ggplot(wine_data, aes(y=reorder(country,wine_servings),x=wine_servings))+
   geom_col() +
   theme_economist() +
-  labs(title="Wine Consumption Top 25 Countries", subtitle= "in # Wine Serving consumed per person in 2010\n", y="", x="\n # Wine Servings") +
+  labs(title="Wine Consumption Top 25 Countries", subtitle= "\nin # Wine Serving consumed per person in 2010\n", y="", x="\n # Wine Servings") +
   scale_x_continuous(expand = c(0,0))
 
 ```
 
 Finally, make a plot that shows the top 25 spirit consuming countries
 ```{r spirit_plot}
-# YOUR CODE GOES HERE
 spirit_data <- drinks %>%
   arrange(desc(spirit_servings))%>%
   slice(1:25)
@@ -125,7 +119,7 @@ spirit_data
 ggplot(spirit_data, aes(y=reorder(country,spirit_servings),x=spirit_servings))+
   geom_col() +
   theme_economist() +
-  labs(title="Spirit Consumption Top 25 Countries", subtitle= "in # Spirit Serving consumed per person in 2010\n", y="", x="\n # Spirit Servings") +
+  labs(title="Spirit Consumption Top 25 Countries", subtitle= "\nin # Spirit Serving consumed per person in 2010\n", y="", x="\n # Spirit Servings") +
   scale_x_continuous(expand = c(0,0))
 ```
 
@@ -133,10 +127,18 @@ What can you infer from these plots? Don't just explain what's in the graph, but
 
 We can see significant differences in alcohol consumption over three classes of alcohol: beer, wine, and spirits. This comes along with at least two reasons behind it:
 
+<<<<<<< HEAD
+First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. What is more, we see that muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For the wealth we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
+- Type of alcohol depending on 
+- German history , had a lot of wheat, started to produce beer ...b gfdg
+- sterotypes (France: wine, Germany: beer, spirit: Russia, Belarus)
+
+=======
 First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, the Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. The origins of particular alcohol consumption may lay in the can be connected to the economic resources available to a country during its development. For example, Germany had a prosperous agriculture industry with a big production of wheat. As a result, this allowed them to start successful beer production, making this drink popular among the citizens.
 At the same time, the interesting fact is that well-known stereotypes are actually reflected in the data. Countries like Russia and Belarus indeed consume the highest amount of spirits, especially, we believe, their famous vodka. Germany and the Czech Republic are leading in beer consumption, while France and Portugal stick to their prominent wines. 
 What is more, we see that Muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For wealth, we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
 Lastly, another interesting observation is that there are no countries with leading positions in several categories like beer and spirits, or wine and spirits. This means, that the actual alcohol consumption is more about preferences of the citizens connected to the above-stated reasons, rather than just pure consumption of alcohol with an aim to get tipsy.
+>>>>>>> 08b27f950ce5690ad41bb5fa6175a41b551b4032
 
 # Analysis of movies- IMDB dataset
 
@@ -203,7 +205,7 @@ p<-ggplot(movies,aes(rating))+
   geom_histogram()+
   facet_wrap(~genre)+
   theme_economist()+
-  labs(title="Distribution of movie ratings among different genre", y="Count of observations\n", x="Rating")
+  labs(title="Distribution of movie ratings among different genre\n", y="Count of observations\n", x="Rating")
 p
 ```
 ## Use `ggplot` to answer the following
@@ -246,6 +248,7 @@ In some genres there is even a negative correlation, i.e. Documentary. However, 
 However, animation, documentary, fantasy and sci-fi are exceptions.
 For family, romance, musical, thriller and western, the data is not sufficient to tell any relationships.
 The dataset is biased towards certain genres of movies, and it fail to represent the complete landscape of the movie industry.
+
 ```{r, gross_on_rating, fig.width=10}
 ggplot(movies, aes(y=gross, x=rating))+
   geom_point()+
@@ -595,7 +598,7 @@ hr_cleaned %>%
 hr_cleaned %>% 
   ggplot(aes(y = reorder(job_role, monthly_income), x=monthly_income)) +
   geom_boxplot() +
-  labs(title = "Income of different job roles", y = "", x="Monthly income") +
+  labs(title = "Income of different job roles", y = "", x="\nMonthly income") +
   theme_economist()
 ```
 
@@ -607,7 +610,7 @@ hr_cleaned %>%
   summarise(mean_income = AVERAGE(monthly_income)) %>% 
   ggplot(aes(x = reorder(education, -mean_income), y = mean_income)) +
   geom_col() +
-  labs(title = "mean income by education") +
+  labs(title = "Mean income by education") +
   theme_economist()
 
 hr_cleaned %>% 
@@ -615,7 +618,7 @@ hr_cleaned %>%
   summarise(median_income = median(monthly_income)) %>% 
   ggplot(aes(x = reorder(education, -median_income), y = median_income)) +
   geom_col() +
-  labs(title = "median income by education") +
+  labs(title = "Median income by education") +
   theme_economist()
 ```
 
@@ -626,7 +629,7 @@ hr_cleaned %>%
   geom_histogram() +
   facet_wrap(~education) +
   theme_economist() +
-  labs(title = "Distribution of income by education level", y = "Number of observations", x="Monthly income")
+  labs(title = "Distribution of income by education level\n", y = "Number of observations", x="Monthly income")
 
 ```
 
@@ -637,7 +640,7 @@ hr_cleaned %>%
   ggplot(aes(x = age, y = monthly_income)) +
   geom_point() +
   facet_wrap(~job_role) +
-  labs(title = "Income vs age, by job role\n", x="Age", y="Monthly income") +
+  labs(title = "Income vs age, by job role\n", x="\nAge", y="Monthly income\n") +
   theme_economist()
 ```
 
@@ -648,7 +651,7 @@ hr_cleaned %>%
   summarise(median_income = median(monthly_income)) %>% 
   ggplot(aes(x = reorder(marital_status, -median_income), y = median_income)) +
   geom_col() +
-  labs(title = "Median income by marital status", x="Maritial status", y="Median income") +
+  labs(title = "Median income by marital status", x="Maritial status\n", y="\nMedian income") +
   theme_economist()
 
 
@@ -673,7 +676,7 @@ You may find these helpful:
 ```{r, warning=FALSE}
 # Replicate Figure 3
 library(ggrepel)
-#CDC_Males <- read_csv("CDC_Males.csv")
+CDC_Males <- read_csv("CDC_Males.csv")
 glimpse(CDC_Males)
 skim(CDC_Males)
 CDC_Males_Firearm<-
@@ -687,7 +690,7 @@ CDC_Males%>%
   xlab("White Suicide Rate (per 100 000 per Year)") + ylab("White Homicide Rate (per 100 000 per Year)")+ #x and y axis labels
  theme_classic()+ # white background
   theme(plot.title= element_text(color="black", size=10), axis.title.x= element_text(color="black", size=9, face="bold"), axis.title.y=element_text(color="black", size=9, face="bold"),legend.title=element_text(face="bold", size=8), legend.text=element_text(face="bold", size=7))+ #font size and type for title, legend, and axis labels
-  labs(fill="Gun ownership",size="White population") + #lsegend titles
+  labs(fill="Gun ownership",size="White population") + #legend titles
   guides(fill=guide_legend(order=1), size=guide_legend(order=2)) + # reorder legend
   scale_size_continuous(breaks=c(200000,500000,1500000,3000000,7000000), labels= c("200 000", "500 000","1 500 000", "3 000 000", "7 000 000"), range=c(2,8))+ #legend scale and labels
   geom_text_repel(segment.alpha=0, size=2.5)+ # point labels font and positioning
