@@ -200,7 +200,9 @@ movies_rating
 
 p<-ggplot(movies,aes(rating))+
   geom_histogram()+
-  facet_wrap(~genre)
+  facet_wrap(~genre)+
+  theme_economist()+
+  labs(title="Distribution of movie ratings among different genre", y="Count of observations\n", x="Rating")
 p
 ```
 ## Use `ggplot` to answer the following
@@ -209,25 +211,29 @@ p
   
 Y-axes should be 'gross', X-axes should be 'cast_facebook_likes'.  
 Cast_facebook_likes does bot seem to be a good indicator of the gross revenue a movie will make, as there is no linear relationship between the two variable.  
-```{r, gross_on_fblikes}
+```{r, gross_on_fblikes, fig.width=10}
 glimpse(movies)
 ggplot(movies, aes(y=gross, x=cast_facebook_likes))+
   geom_point() +
   scale_x_log10()+
-  scale_y_log10()+
-  geom_smooth(method=lm, se=FALSE) 
+  scale_y_log10(labels = scales::dollar_format())+
+  geom_smooth(method=lm, se=FALSE) +
+  theme_economist()+
+  labs(title="Relationship between Facebook likes and gross profit in box office", x="\nFacebook likes", y="Profit in box office\n" )
 ```
 The scatterplot and the regression line clearly indicates the relationship between higher cast_facebook_likes and higher gross earnings in the US box office (the regression line shows a positive incline).
 
   - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
   
 Budget is also not a good indicator of gross revenue a movie can make, since the scatterplot is very scattered.
-```{r, gross_on_budget}
+```{r, gross_on_budget, fig.width=10}
 ggplot(movies, aes(x=gross, y=budget))+
   geom_point()+
-  scale_x_log10()+
-  scale_y_log10()+
-  geom_smooth(method=lm, se=FALSE)
+  scale_x_log10(labels = scales::dollar_format())+
+  scale_y_log10(labels = scales::dollar_format())+
+  geom_smooth(method=lm, se=FALSE)+
+  labs(title="Relationship between budget and gross profit in box office", x="\nProfit in box office", y="Budget\n" )+
+  theme_economist()
 ```
 Also, this scatterplot and the regression line clearly indicates the relationship between higher budget and higher gross earnings in the US box office (the regression line shows a positive incline).
  
@@ -239,13 +245,15 @@ In some genres there is even a negative correlation, i.e. Documentary. However, 
 However, animation, documentary, fantasy and sci-fi are exceptions.
 For family, romance, musical, thriller and western, the data is not sufficient to tell any relationships.
 The dataset is biased towards certain genres of movies, and it fail to represent the complete landscape of the movie industry.
-```{r, gross_on_rating}
+```{r, gross_on_rating, fig.width=10}
 ggplot(movies, aes(y=gross, x=rating))+
   geom_point()+
   scale_x_log10()+
-  scale_y_log10()+
+  scale_y_log10(labels = scales::dollar_format())+
   geom_smooth(mothod=lm, se=FALSE)+
-  facet_wrap(~genre)
+  facet_wrap(~genre)+
+  labs(title = "Relationship between rating and gross profit in box office\n", x="\nRating", y="Gross profit in box office\n")+
+  theme_economist()
 ```
 
 
@@ -394,7 +402,8 @@ Plot a density plot, using `geom_density()`, for each of the stocks
 ggplot(myStocks_returns_monthly, aes(x=monthly_returns))+
   geom_density()+
   facet_wrap(~symbol)+
-  labs(title='Monthly Returns - Density Plots')
+  labs(title='Monthly Returns - Density Plots\n', x="\nMonthly returns", y="Percentage\n")+
+  theme_economist()
 
 ```
 
@@ -407,16 +416,16 @@ Finally, produce a plot that shows the expected monthly return (mean) of a stock
 ```{r risk_return_plot}
 library(ggrepel)
 
-ggplot(summarise_monthly_returns, aes(x=mean_month_return, y=sd_month_return, label=symbol))+
+ggplot(summarise_monthly_returns, aes(y=mean_month_return, x=sd_month_return, label=symbol))+
   geom_point() +
   geom_text_repel()+
-  geom_lm(method=lm,se=FALSE)
+  geom_lm(method=lm,se=FALSE)+
+  theme_economist()+
+  labs(title="Relation between monthly return and risk\n", y="Monthly return", x="\nRisk (standard deviation)")
 
 ```
 
 What can you infer from this plot? Are there any stocks which, while being riskier, do not have a higher expected return?
-
-> TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
 
 From the plot we can infer that as the mean monthly return rises, so does the standard deviation, which makes sense, since a higher return usually indicates higher variability in prices, meaning that the higher the return of the stock the more risk associated with the returns.
 There are some cases, where the volatility (standard deviation) is high, with a lower mean monthly return. In particular, the biggest outliar is DOW, with a mean monthly return smaller than 0.01 and the highest standard deviation. There are some other cases bordering on having outliar-like characteristics, like Cisco Systems, american express and other financial services stocks like JP Morgan and Goldman Sachs.
@@ -523,25 +532,25 @@ hr_cleaned %>%
 hr_cleaned %>% 
   ggplot(aes(age)) +
   geom_density() +
-  labs(title = "distribution of age") +
+  labs(title = "Distribution of age") +
   theme_economist()
 
 hr_cleaned %>% 
   ggplot(aes(years_at_company)) +
   geom_density() +
-  labs(title = "distribution of years_at_company") +
+  labs(title = "Distribution of years_at_company") +
   theme_economist()
 
 hr_cleaned %>% 
   ggplot(aes(monthly_income)) +
   geom_density() +
-  labs(title = "distribution of monthly_income") +
+  labs(title = "Distribution of monthly_income") +
   theme_economist()
 
 hr_cleaned %>% 
   ggplot(aes(years_since_last_promotion)) +
   geom_density() +
-  labs(title = "distribution of years_since_last_promotion") +
+  labs(title = "Distribution of years_since_last_promotion") +
   theme_economist()
 ```
 
@@ -554,7 +563,7 @@ hr_cleaned %>%
   mutate(percent_job_satisfaction = n/length(hr_cleaned$job_satisfaction)) %>%
   ggplot(aes(x = job_satisfaction, y = percent_job_satisfaction)) +
   geom_col() +
-  labs(title = "distribution of job_satisfaction") +
+  labs(title = "Distribution of job_satisfaction",x="\nJob satisfaction",y="Percentage") +
   theme_economist()
 
 hr_cleaned %>% 
@@ -563,7 +572,7 @@ hr_cleaned %>%
   mutate(percent_work_life_balance = n/length(hr_cleaned$work_life_balance)) %>%
   ggplot(aes(x = work_life_balance, y = percent_work_life_balance)) +
   geom_col() +
-  labs(title = "distribution of work_life_balance") +
+  labs(title = "Distribution of work_life_balance", x="\nWork-life-balance",y="Percentage") +
   theme_economist()
 ```
 
@@ -586,7 +595,7 @@ hr_cleaned %>%
 hr_cleaned %>% 
   ggplot(aes(y = reorder(job_role, monthly_income), x=monthly_income)) +
   geom_boxplot() +
-  labs(title = "income of different job roles", y = "") +
+  labs(title = "Income of different job roles", y = "", x="Monthly income") +
   theme_economist()
 ```
 
@@ -617,18 +626,18 @@ hr_cleaned %>%
   geom_histogram() +
   facet_wrap(~education) +
   theme_economist() +
-  labs(title = "distribution of income by education level", y = "")
+  labs(title = "Distribution of income by education level", y = "Number of observations", x="Monthly income")
 
 ```
 
 
 ## income vs age, faceted by `job_role`
-```{r income by age}
+```{r income by age, fig.width=10}
 hr_cleaned %>% 
   ggplot(aes(x = age, y = monthly_income)) +
   geom_point() +
   facet_wrap(~job_role) +
-  labs(title = "income vs age, by job role") +
+  labs(title = "Income vs age, by job role\n", x="Age", y="Monthly income") +
   theme_economist()
 ```
 
@@ -639,7 +648,7 @@ hr_cleaned %>%
   summarise(median_income = median(monthly_income)) %>% 
   ggplot(aes(x = reorder(marital_status, -median_income), y = median_income)) +
   geom_col() +
-  labs(title = "median income by marital status") +
+  labs(title = "Median income by marital status", x="Maritial status", y="Median income") +
   theme_economist()
 
 
@@ -649,31 +658,8 @@ hr_cleaned %>%
 
 The purpose of this exercise is to make a publication-ready plot using your `dplyr` and `ggplot2` skills. Open the journal article "Riddell_Annals_Hom-Sui-Disparities.pdf". Read the abstract and have a look at Figure 3. The data you need is "CDC_Males.csv".
 
-```{r, warning=FALSE}
-# Replicate Figure 3
-library(ggrepel)
-CDC_Males <- vroom::vroom("CDC_Males.csv")
-glimpse(CDC_Males)
-skim(CDC_Males)
-CDC_Males_Firearm<- 
-CDC_Males%>%
-  filter(type.fac=="Firearm-related") #filter for firearm-related only 
-
-  ggplot(CDC_Males_Firearm, aes(x=crude.suicide.White, y=crude.homicide.White,size= average.pop.white, label=ST)) + #x-axis: white suicide rate, y-axis: white homicide rate, size of points by average white population, label points by state
-  geom_point(aes(fill=gun.house.prev.category), color="black", stroke=0.8, shape=21, alpha=.6)+ #fill points by gun ownership category, outline color black, transparency .6, shape 21 because it is circle with fill and outline, stroke .8 is thickness of outline
-  scale_fill_brewer(type="seq",palette="YlOrRd", direction=1,breaks= c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%"),labels=c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%")) + #colorscheme from colorbrewer2
-  ggtitle("fig 3") + #plot title
-  xlab("white suic") + ylab("white homic")+ #x and y axis labels
- theme_classic()+ # white background
-  theme(plot.title= element_text(color="black", size=10), axis.title.x= element_text(color="black", size=9, face="bold"), axis.title.y=element_text(color="black", size=9, face="bold"),legend.title=element_text(face="bold", size=8), legend.text=element_text(face="bold", size=7))+ #font size and type for title, legend, and axis labels
-  labs(fill="gun own",size="white p") + #legend titles
-  guides(fill=guide_legend(order=1), size=guide_legend(order=2)) + # reorder legend
-  scale_size_continuous(breaks=c(200000,500000,1500000,3000000,7000000), labels= c("200 000", "500 000","1 500 000", "3 000 000", "7 000 000"), range=c(2,8))+ #legend scale and labels
-  geom_text_repel(segment.alpha=0, size=2.5)+ # point labels font and positioning
-    annotate(geom="text", x=27, y=1, label="spearman corr: 0.72", size=2.5)+ #add Spearman correlation annotation
-    
-         NULL
-
+```{r challenge1, echo=FALSE, out.width="90%"}
+knitr::include_graphics(here::here("images", "figure3.jpeg"), error = FALSE)
 ```
 
 
@@ -684,6 +670,32 @@ You may find these helpful:
 - https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html
 - http://colorbrewer2.org
 
+```{r, warning=FALSE}
+# Replicate Figure 3
+library(ggrepel)
+#CDC_Males <- read_csv("CDC_Males.csv")
+glimpse(CDC_Males)
+skim(CDC_Males)
+CDC_Males_Firearm<-
+CDC_Males%>%
+  filter(type.fac=="Firearm-related") #filter for firearm-related only 
+
+  ggplot(CDC_Males_Firearm, aes(x=crude.suicide.White, y=crude.homicide.White,size= average.pop.white, label=ST)) + #x-axis: white suicide rate, y-axis: white homicide rate, size of points by average white population, label points by state
+  geom_point(aes(fill=gun.house.prev.category), color="black", stroke=0.8, shape=21, alpha=.8)+ #fill points by gun ownership category, outline color black, transparency .8, shape 21 because it is circle with fill and outline, stroke .8 is thickness of outline
+  scale_fill_brewer(type="seq",palette="YlOrRd", direction=1,breaks= c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%"),labels=c("10.2%-19.9%", "20.0%-34.9%","35.0%-44.9%","45.0%-65.5%")) + #colorscheme from colorbrewer2
+  ggtitle("Figure 3. Relationship between the annual rates of firearm homicide and suicide among white men, \nby state, and reported household firearm ownership, 2008 to 2016.") + #plot title
+  xlab("White Suicide Rate (per 100 000 per Year)") + ylab("White Homicide Rate (per 100 000 per Year)")+ #x and y axis labels
+ theme_classic()+ # white background
+  theme(plot.title= element_text(color="black", size=10), axis.title.x= element_text(color="black", size=9, face="bold"), axis.title.y=element_text(color="black", size=9, face="bold"),legend.title=element_text(face="bold", size=8), legend.text=element_text(face="bold", size=7))+ #font size and type for title, legend, and axis labels
+  labs(fill="Gun ownership",size="White population") + #lsegend titles
+  guides(fill=guide_legend(order=1), size=guide_legend(order=2)) + # reorder legend
+  scale_size_continuous(breaks=c(200000,500000,1500000,3000000,7000000), labels= c("200 000", "500 000","1 500 000", "3 000 000", "7 000 000"), range=c(2,8))+ #legend scale and labels
+  geom_text_repel(segment.alpha=0, size=2.5)+ # point labels font and positioning
+    annotate(geom="text", x=27, y=1, label="Spearman correlation: 0.72", size=2.5)+ #add Spearman correlation annotation
+
+         NULL
+
+```
 
 
 
