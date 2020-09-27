@@ -70,7 +70,7 @@ What are the variable types? Any missing values we should worry about?
 
 - There are 1 character (country) and 4 numeric variables (beer_servings, spirit_servings, wine_servings, total_litres_of_pure_alcohol). We don't have any missing data, they are all complete.
 
-<<<<<<< HEAD
+
 ```{r glimpse_skim_data}
 data(drinks)
 skim(drinks)
@@ -127,18 +127,17 @@ What can you infer from these plots? Don't just explain what's in the graph, but
 
 We can see significant differences in alcohol consumption over three classes of alcohol: beer, wine, and spirits. This comes along with at least two reasons behind it:
 
-<<<<<<< HEAD
 First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. What is more, we see that muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For the wealth we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
 - Type of alcohol depending on 
 - German history , had a lot of wheat, started to produce beer ...b gfdg
 - sterotypes (France: wine, Germany: beer, spirit: Russia, Belarus)
 
-=======
+
 First, culture and secondly wealth. For beer consumption we see that Namibia has the highest as it used to be a German colony, the Czech Republic with the City of Pilsen (founding place for the beer type: "Pils") has the second highest beer consumption, and Germany has the 4th highest beer consumption with its long history of beer making and currently more than 1,500 beer breweries all over Germany. The origins of particular alcohol consumption may lay in the can be connected to the economic resources available to a country during its development. For example, Germany had a prosperous agriculture industry with a big production of wheat. As a result, this allowed them to start successful beer production, making this drink popular among the citizens.
 At the same time, the interesting fact is that well-known stereotypes are actually reflected in the data. Countries like Russia and Belarus indeed consume the highest amount of spirits, especially, we believe, their famous vodka. Germany and the Czech Republic are leading in beer consumption, while France and Portugal stick to their prominent wines. 
 What is more, we see that Muslim countries are not included in the top alcohol consuming countries, as their religion and culture is against alcohol. For wealth, we can see that a lot of rich western countries have a higher consumption as they have more money to spend on luxury goods, i.e. alcohol.
 Lastly, another interesting observation is that there are no countries with leading positions in several categories like beer and spirits, or wine and spirits. This means, that the actual alcohol consumption is more about preferences of the citizens connected to the above-stated reasons, rather than just pure consumption of alcohol with an aim to get tipsy.
->>>>>>> 08b27f950ce5690ad41bb5fa6175a41b551b4032
+
 
 # Analysis of movies- IMDB dataset
 
@@ -165,6 +164,7 @@ Besides the obvious variables of `title`, `genre`, `director`, `year`, and `dura
 
 - Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
 ```{r}
+movies <- vroom::vroom("movies.csv")
 skim(movies)
 sum(duplicated(movies))
 ```
@@ -262,14 +262,12 @@ ggplot(movies, aes(y=gross, x=rating))+
 
 # Returns of financial stocks
 
-
 > You may find useful the material on [finance data sources](https://mfa2021.netlify.app/reference/finance_data/). 
 
 We will use the `tidyquant` package to download historical data of stock prices, calculate returns, and examine the distribution of returns. 
 
 We must first identify which stocks we want to download data for, and for this we must know their ticker symbol; Apple is known as AAPL, Microsoft as MSFT, McDonald's as MCD, etc. The file `nyse.csv` contains 508 stocks listed on the NYSE, their ticker `symbol`, `name`, the IPO  (Initial Public Offering) year, and the sector and industry the company is in.
-
-
+  
 ```{r load_nyse_data, message=FALSE, warning=FALSE}
 nyse <- read_csv("nyse.csv")
 glimpse(nyse)
@@ -599,7 +597,8 @@ hr_cleaned %>%
   ggplot(aes(y = reorder(job_role, monthly_income), x=monthly_income)) +
   geom_boxplot() +
   labs(title = "Income of different job roles", y = "", x="\nMonthly income") +
-  theme_economist()
+  theme_economist()+
+  scale_x_continuous(labels = scales::dollar_format())
 ```
 
 
@@ -610,7 +609,7 @@ hr_cleaned %>%
   summarise(mean_income = AVERAGE(monthly_income)) %>% 
   ggplot(aes(x = reorder(education, -mean_income), y = mean_income)) +
   geom_col() +
-  labs(title = "Mean income by education") +
+  labs(title = "Mean income by education", y="Mean income\n", x="\nEducation level") +
   theme_economist()
 
 hr_cleaned %>% 
@@ -618,18 +617,19 @@ hr_cleaned %>%
   summarise(median_income = median(monthly_income)) %>% 
   ggplot(aes(x = reorder(education, -median_income), y = median_income)) +
   geom_col() +
-  labs(title = "Median income by education") +
+  labs(title = "Median income by education", y="Median income\n", x="\nEducation level") +
   theme_economist()
 ```
 
 ## distribution of income by education level
-```{r income by education}
+```{r income by education, fig.width=15}
 hr_cleaned %>% 
   ggplot(aes(monthly_income)) +
   geom_histogram() +
   facet_wrap(~education) +
   theme_economist() +
-  labs(title = "Distribution of income by education level\n", y = "Number of observations", x="Monthly income")
+  labs(title = "Distribution of income by education level\n", y = "Number of observations\n", x="\nMonthly income")+
+  scale_x_continuous(labels= scales::dollar_format())
 
 ```
 
@@ -641,6 +641,7 @@ hr_cleaned %>%
   geom_point() +
   facet_wrap(~job_role) +
   labs(title = "Income vs age, by job role\n", x="\nAge", y="Monthly income\n") +
+  geom_lm(method=lm,se=FALSE)+
   theme_economist()
 ```
 
@@ -651,27 +652,14 @@ hr_cleaned %>%
   summarise(median_income = median(monthly_income)) %>% 
   ggplot(aes(x = reorder(marital_status, -median_income), y = median_income)) +
   geom_col() +
-  labs(title = "Median income by marital status", x="Maritial status\n", y="\nMedian income") +
+  labs(title = "Median income by marital status", x="\nMaritial status", y="Median income\n") +
   theme_economist()
 
 
 ```
 
-# Challenge 1: Replicating a chart
+# Challenge 1: Chart on homicide and suicide
 
-The purpose of this exercise is to make a publication-ready plot using your `dplyr` and `ggplot2` skills. Open the journal article "Riddell_Annals_Hom-Sui-Disparities.pdf". Read the abstract and have a look at Figure 3. The data you need is "CDC_Males.csv".
-
-```{r challenge1, echo=FALSE, out.width="90%"}
-knitr::include_graphics(here::here("images", "figure3.jpeg"), error = FALSE)
-```
-
-
-Don't worry about replicating it exactly, try and see how far you can get. You're encouraged to work together if you want to and exchange tips/tricks you figured out. 
-
-You may find these helpful:
-
-- https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html
-- http://colorbrewer2.org
 
 ```{r, warning=FALSE}
 # Replicate Figure 3
@@ -703,23 +691,6 @@ CDC_Males%>%
 
 
 # Challenge 2: 2016 California Contributors plots
-
-As discussed in class, I would like you to reproduce the plot that shows the top ten cities in highest amounts raised in political contributions in California during the 2016 US Presidential election.
-
-
-
-```{r challenge2, echo=FALSE, out.width="100%"}
-knitr::include_graphics(here::here("images", "challenge2.png"), error = FALSE)
-```
-
-
-To get this plot, you must join two dataframes; the one you have with all contributions, and data that can translate zipcodes to cities.
-You can find a file with all US zipcodes, e.g., here http://www.uszipcodelist.com/download.html. 
-
-The easiest way would be to create two plots and then place one next to each other. For this, you will need the `patchwork` package.
-https://cran.r-project.org/web/packages/patchwork/index.html
-
-While this is ok, what if one asked you to create the same plot for the top 10 candidates and not just the top two? The most challenging part is how to reorder within categories, and for this you will find Julia Silge's post on [REORDERING AND FACETTING FOR GGPLOT2](https://juliasilge.com/blog/reorder-within/) useful.
 
 
 ```{r, load_CA_data, warnings= FALSE, message=FALSE}
@@ -777,31 +748,11 @@ top10_cand_city <- left_join(top10_cand_name,top_candidates,"cand_nm")%>%
 
 ```
 
-
-
-# Deliverables
-
-There is a lot of explanatory text, comments, etc. You do not need these, so delete them and produce a stand-alone document that you could share with someone. Knit the edited and completed R Markdown file as an HTML document (use the "Knit" button at the top of the script editor window) and upload it to Canvas.
-
 # Details
 
-- Who did you collaborate with: TYPE NAMES HERE
-- Approximately how much time did you spend on this problem set: ANSWER HERE
-- What, if anything, gave you the most trouble: ANSWER HERE
-
-
-**Please seek out help when you need it,** and remember the [15-minute rule](https://mam2021.netlify.app/syllabus/#the-15-minute-rule){target=_blank}. You know enough R (and have enough examples of code from class and your readings) to be able to do this. If you get stuck, ask for help from others, post a question on Slack-- and remember that I am here to help too!  
-
-> As a true test to yourself, do you understand the code you submitted and are you able to explain it to someone else? 
-
-
-# Rubric
-
-Check minus (1/5): Displays minimal effort. Doesn't complete all components. Code is poorly written and not documented. Uses the same type of plot for each graph, or doesn't use plots appropriate for the variables being analyzed. 
-
-Check (3/5): Solid effort. Hits all the elements. No clear mistakes. Easy to follow (both the code and the output). 
-
-Check plus (5/5): Finished all components of the assignment correctly and addressed both challenges. Code is well-documented (both self-documented and with additional comments as necessary). Used tidyverse, instead of base R. Graphs and tables are properly labelled. Analysis is clear and easy to follow, either because graphs are labeled clearly or you've written additional text to describe how you interpret the output.
+- Who did you collaborate with: Shengwei Lai, Matias Pere, Philipp Permyakov, Sena Salman, Linda Wu, Alexander Pracht
+- Approximately how much time did you spend on this problem set: n.a.
+- What, if anything, gave you the most trouble: getting used to git hub
 
 
 
