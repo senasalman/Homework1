@@ -413,7 +413,9 @@ ggplot(summarise_monthly_returns, aes(x=mean_month_return, y=sd_month_return, la
 What can you infer from this plot? Are there any stocks which, while being riskier, do not have a higher expected return?
 
 > TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
+From the plot we can infer that as the mean monthly return rises, so does the standard deviation, which makes sense, since a higher return usually indicates higher variability in prices, meaning that the higher the return of the stock the more risk associated with the returns.
 
+There are some cases, where the volatility (standard deviation) is high, with a lower mean monthly return. In particular, the biggest outliar is DOW, with a mean monthly return smaller than 0.01 and the highest standard deviation. There are some other cases bordering on having outliar-like characteristics, like Cisco Systems, american express and other financial services stocks like JP Morgan and Goldman Sachs.
 
 
 # On your own: IBM HR Analytics
