@@ -219,7 +219,6 @@ formula_ci <- comparison %>%
 
   # choose the interval 2011-present
   # what dplyr verb will you use? 
-
   # calculate summary statistics for temperature deviation (delta) 
   # calculate mean, SD, count, SE, lower/upper 95% CI
   # what dplyr verb will you use? 
@@ -240,6 +239,9 @@ data_infer <- comparison %>%
   specify(response = delta)%>%
   generate(reps = 1000, type="bootstrap")%>%
   calculate(stat="mean")
+
+percentile_ci <- data_infer %>%
+  get_confidence_interval(level=0.95, type="percentile")
 ```
 
 > What is the data showing us? Please type your answer after (and outside!) this blockquote. You have to explain what you have done, and the interpretation of the result. One paragraph max, please!
@@ -253,7 +255,7 @@ In this assignment we analyze data from the **2016 GSS sample data**, using it t
 
 
 ```{r, read_gss_data, cache=TRUE}
-gss <- read_csv(here::here("data", "smallgss2016.csv"), 
+gss <- read_csv(here::here("session4-workshop2/data", "smallgss2016.csv"), 
                 na = c("", "Don't know",
                        "No answer", "Not applicable"))
 ```
@@ -274,6 +276,28 @@ Can we estimate the *population* proportion of Snapchat or Instagram users in 20
 1. Create a  new variable, `snap_insta` that is *Yes* if the respondent reported using any of Snapchat (`snapchat`) or Instagram (`instagrm`), and *No* if not. If the recorded value was NA for both of these questions, the value in your new variable should also be NA.
 1. Calculate the proportion of Yes’s for `snap_insta` among those who answered the question, i.e. excluding NAs.
 1. Using the CI formula for proportions, please construct 95% CIs for men and women who used either Snapchat or Instagram
+```{r}
+social_media <- gss%>%
+  mutate(snap_insta = if_else(snapchat == "NA" & instagrm == "NA", "NA", if_else(snapchat == "Yes" | instagrm == "Yes", "Yes", "No")))
+
+social_media_stats <- social_media%>%
+  group_by(snap_insta)%>%
+  count(snap_insta)%>%
+  pivot_wider(names_from=snap_insta, values_from = n )%>%
+  mutate(proportion_yes = Yes/(Yes+No))
+
+
+ci_props <- social_media%>%
+  group_by(sex)%>%
+  summarise(sd=sd(snap_insta, na.rm = TRUE), 
+            count=n(), 
+            se=sqrt(p*(1-p)/n) 
+            t_critical2 = qt(0.975, count-1),
+            lower2 = mean-t_critical2*se,
+            upper2 = mean+t_critical2*se)
+
+```
+
 
 ## Twitter, by education level
 
