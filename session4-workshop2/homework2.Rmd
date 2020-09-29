@@ -209,7 +209,13 @@ Your task is to construct a confidence interval for the average annual delta sin
 
 formula_ci <- comparison %>% 
   filter(interval == "2011-present")%>%
-  summarise(mean_diff=mean(delta,na.rm = TRUE), sd_diff=sd(delta, na.rm = TRUE), count_diff=n(), se_diff=sd_diff/sqrt(count_diff))
+  summarise(mean_diff=mean(delta,na.rm = TRUE),
+            sd_diff=sd(delta, na.rm = TRUE), 
+            count_diff=n(), 
+            se_diff=sd_diff/sqrt(count_diff), 
+            t_critical = qt(0.975, count_diff-1),
+            lower = mean_diff-t_critical*se_diff,
+            upper = mean_diff+t_critical*se_diff)
 
   # choose the interval 2011-present
   # what dplyr verb will you use? 
