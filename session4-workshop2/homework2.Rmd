@@ -80,6 +80,9 @@ You have two objectives in this section:
 
 
 ```{r tidyweather}
+tidyweather <- weather %>%
+  select(c(Year,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec))%>%
+  pivot_longer(cols = 2:13, names_to = "Month", values_to = "delta")
 
 ```
 
@@ -97,7 +100,7 @@ Let us plot the data using a time-series scatter plot, and add a trendline. To d
 > In the following chunk of code, I used the `eval=FALSE` argument, which does not run a chunk of code; I did so that you can knit the document before tidying the data and creating a new dataframe `tidyweather`. When you actually want to run this code and knit your document, you must delete `eval=FALSE`, **not just here but in all chunks were `eval=FALSE` appears.**
 
 
-```{r scatter_plot, eval=FALSE}
+```{r scatter_plot}
 
 tidyweather <- tidyweather %>%
   mutate(date = ymd(paste(as.character(Year), Month, "1")),
@@ -117,9 +120,14 @@ ggplot(tidyweather, aes(x=date, y = delta))+
 Is the effect of increasing temperature more pronounced in some months? Use `facet_wrap()` to produce a seperate scatter plot for each month, again with a smoothing line. Your chart should human-readable labels; that is, each month should be labeled "Jan", "Feb", "Mar" (full or abbreviated month names are fine), not `1`, `2`, `3`. 
 
 ```{r facet_wrap, echo=FALSE}
-
-#Your code goes here...
-
+ggplot(tidyweather, aes(x=date, y=delta))+
+  geom_point()+
+  geom_smooth(color="red") +
+  theme_bw() +
+  facet_wrap(~month)+
+  labs (
+    title = "Weather Anomalies for each month"
+  )
 ```
 
 
@@ -128,7 +136,7 @@ It is sometimes useful to group data into different time periods to study histor
 We remove data before 1800 and before using `filter`. Then, we use the `mutate` function to create a new variable `interval` which contains information on which period each observation belongs to. We can assign the different periods using `case_when()`.
 
 
-```{r intervals, eval=FALSE}
+```{r intervals}
 
 comparison <- tidyweather %>% 
   filter(Year>= 1881) %>%     #remove years prior to 1881
@@ -147,7 +155,7 @@ Inspect the `comparison` dataframe by clicking on it in the `Environment` pane.
 
 Now that we have the `interval` variable, we can create a density plot to study the distribution of monthly deviations (`delta`), grouped by the different time periods we are interested in. Set `fill` to `interval` to group and colour the data by different time periods.
 
-```{r density_plot, eval=FALSE}
+```{r density_plot}
 
 ggplot(comparison, aes(x=delta, fill=interval))+
   geom_density(alpha=0.2) +   #density plot with tranparency set to 20%
@@ -161,7 +169,7 @@ ggplot(comparison, aes(x=delta, fill=interval))+
 
 So far, we have been working with monthly anomalies. However, we might be interested in average annual anomalies. We can do this by using `group_by()` and `summarise()`, followed by a scatter plot to display the result. 
 
-```{r averaging, eval=FALSE}
+```{r averaging}
 
 #creating yearly averages
 average_annual_anomaly <- tidyweather %>% 
@@ -172,7 +180,7 @@ average_annual_anomaly <- tidyweather %>%
   summarise(annual_average_delta = mean(delta, na.rm=TRUE)) 
 
 #plotting the data:
-ggplot(average_annual_anomaly, aes(x=year, y= annual_average_delta))+
+ggplot(average_annual_anomaly, aes(x=Year, y= annual_average_delta))+
   geom_point()+
   
   #Fit the best fit line, using LOESS method
@@ -197,9 +205,11 @@ ggplot(average_annual_anomaly, aes(x=year, y= annual_average_delta))+
 
 Your task is to construct a confidence interval for the average annual delta since 2011, both using a formula and using a bootstrap simulation with the `infer` package. Recall that the dataframe `comparison` has already grouped temperature anomalies according to time intervals; we are only interested in what is happening  between 2011-present.
 
-```{r, calculate_CI_using_formula, eval=FALSE}
+```{r, calculate_CI_using_formula}
 
 formula_ci <- comparison %>% 
+  filter(interval == "2011-present")%>%
+  summarise(mean_diff=mean(delta,na.rm = TRUE), sd_diff=sd(delta, na.rm = TRUE), count_diff=n(), se_diff=sd_diff/sqrt(count_diff))
 
   # choose the interval 2011-present
   # what dplyr verb will you use? 
